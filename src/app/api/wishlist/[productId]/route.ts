@@ -1,16 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const API =
+  process.env.NEXT_PUBLIC_API_URL;
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ productId: string }> }
-) {
+  
+
+type RouteContext = {
+  params: Promise<{
+    productId: string;
+  }>;
+};
+
+function parseJson(text: string) {
+  try {
+    return text ? JSON.parse(text) : { ok: true };
+  } catch {
+    return { message: text };
+  }
+}
+
+export async function POST(req: NextRequest, { params }: RouteContext) {
   const token = req.cookies.get("token")?.value;
-  if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+
+  if (!token) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
 
   try {
-    const res = await fetch(`${API}/wishlist/${params.productId}`, {
+    const { productId } = await params;
+
+    const res = await fetch(`${API}/wishlist/${productId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -18,31 +37,49 @@ export async function POST(
       },
       cache: "no-store",
     });
+
     const text = await res.text();
-    const data = text ? JSON.parse(text) : {};
+    const data = parseJson(text);
+
     return NextResponse.json(data, { status: res.status });
-  } catch (e) {
-    console.error("wishlist POST error:", e);
-    return NextResponse.json({ error: "Error de conexión" }, { status: 500 });
+  } catch (error) {
+    console.error("wishlist POST error:", error);
+
+    return NextResponse.json(
+      { error: "Error de conexión" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ productId: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: RouteContext) {
   const token = req.cookies.get("token")?.value;
-  if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+
+  if (!token) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
 
   try {
-    const res = await fetch(`${API}/wishlist/${(await params).productId}`, {
+    const { productId } = await params;
+
+    const res = await fetch(`${API}/wishlist/${productId}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       cache: "no-store",
     });
-    return new NextResponse(null, { status: res.status });
-  } catch (e) {
-    console.error("wishlist DELETE error:", e);
-    return NextResponse.json({ error: "Error de conexión" }, { status: 500 });
+
+    const text = await res.text();
+    const data = parseJson(text);
+
+    return NextResponse.json(data, { status: res.status });
+  } catch (error) {
+    console.error("wishlist DELETE error:", error);
+
+    return NextResponse.json(
+      { error: "Error de conexión" },
+      { status: 500 }
+    );
   }
 }
