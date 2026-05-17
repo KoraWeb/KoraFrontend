@@ -4,7 +4,7 @@ const API = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://lo
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
