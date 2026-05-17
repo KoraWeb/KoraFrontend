@@ -96,6 +96,8 @@ export default function WishlistPage() {
                 description: "",
                 price: product.price,
                 category: product.category,
+                brand: "",
+                gender: "UNISEX",
                 images: [product.image],
                 sizes: [],
               }}
