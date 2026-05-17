@@ -5,7 +5,7 @@ import Link from "next/link";
 const sections = [
   {
     href: "/admin/productos",
-    emoji: "📦",
+    emoji: "",
     title: "Productos",
     desc: "Gestionar catálogo, precios, tallas e imágenes con Cloudinary",
     cta: "Ir al catálogo →",
@@ -13,7 +13,7 @@ const sections = [
   },
   {
     href: "/admin/usuarios",
-    emoji: "👥",
+    emoji: "",
     title: "Usuarios",
     desc: "Ver usuarios registrados y actividad reciente",
     cta: "Ver usuarios →",
@@ -21,7 +21,7 @@ const sections = [
   },
   {
     href: "/admin/pedidos",
-    emoji: "🛍️",
+    emoji: "",
     title: "Pedidos",
     desc: "Gestionar pedidos y alertar al usuario por email automáticamente",
     cta: "Ver pedidos →",
@@ -29,7 +29,7 @@ const sections = [
   },
   {
     href: "/admin/promociones",
-    emoji: "🏷️",
+    emoji: "",
     title: "Promociones",
     desc: "Crear y gestionar códigos de descuento por porcentaje o importe fijo",
     cta: "Gestionar promociones →",
@@ -37,7 +37,7 @@ const sections = [
   },
   {
     href: "/admin/reportes",
-    emoji: "📬",
+    emoji: "",
     title: "Reportes",
     desc: "Ver y responder mensajes de contacto enviados por los clientes",
     cta: "Ver reportes →",
@@ -45,7 +45,7 @@ const sections = [
   },
   {
     href: "/admin/fotos",
-    emoji: "📸",
+    emoji: "",
     title: "Galería de fotos",
     desc: "Subir imágenes masivamente a Cloudinary y asignarlas a productos",
     cta: "Gestionar fotos →",

@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -177,9 +179,8 @@ export default function AdminPedidosPage() {
                   const stepIdx = STATUS_FLOW.indexOf(o.status);
                   const isExpanded = expandedId === o.id;
                   return (
-                    <>
+                    <React.Fragment key={o.id}>
                       <tr
-                        key={o.id}
                         className="border-b border-black/5 hover:bg-black/[0.01] transition-colors cursor-pointer"
                         onClick={() => setExpandedId(isExpanded ? null : o.id)}
                       >
@@ -318,7 +319,7 @@ export default function AdminPedidosPage() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </tbody>

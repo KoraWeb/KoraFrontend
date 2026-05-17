@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryUrl } from "@/lib/cloudinary";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getProducts } from "@/api/product/route";
@@ -24,7 +26,7 @@ export default function AdminProductosPage() {
     setDeleting(id);
     try {
       // Llama a la API Route server-side — el token nunca sale al cliente
-      const res = await fetch(`/api/admin/productos/${id}`, {
+      const res = await fetch(`/api/admin/productos?id=${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error();
@@ -99,7 +101,7 @@ export default function AdminProductosPage() {
                     <td className="px-5 py-3">
                       <div className="w-12 h-12 rounded-lg bg-[#f2f2f2] overflow-hidden flex items-center justify-center">
                         {product.images?.[0]
-                          ? <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain p-1" onError={e => (e.target as HTMLImageElement).style.display = "none"} />
+                          ? <img src={cloudinaryUrl(product.images[0], { width: 200, height: 250 })} alt={product.name} className="w-full h-full object-contain" onError={e => (e.target as HTMLImageElement).style.display = "none"} />
                           : <span className="text-black/20 text-xs">Sin foto</span>
                         }
                       </div>

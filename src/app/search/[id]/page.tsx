@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { cloudinaryUrl } from "@/lib/cloudinary";
 import { getProductById } from "@/api/product/route";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -120,7 +121,7 @@ export default function ProductPage() {
                 className="relative aspect-[4/5] w-full overflow-hidden bg-[#f2f2f2]"
               >
                 <Image
-                  src={image || "/placeholder.png"}
+                  src={cloudinaryUrl(image, { width: 800, height: 1000 })}
                   alt={`${product.name} imagen ${index + 1}`}
                   fill
                   priority={index === 0}

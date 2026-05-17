@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryUrl } from "@/lib/cloudinary";
+
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
@@ -11,10 +13,26 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const STATUS_STEPS = ["PENDING", "SHIPPED", "IN_TRANSIT", "DELIVERED"];
 
+// Proporciones de tiempo acumulado por estado (0 a 1)
+const STATUS_PROGRESS: Record<string, number> = {
+  PENDING:    0,
+  SHIPPED:    0.35,
+  IN_TRANSIT: 0.70,
+  DELIVERED:  1,
+};
+
 function getExpectedDelivery(order: Order): string {
   const d = new Date(order.date);
   d.setDate(d.getDate() + (order.deliveryDays ?? 7));
   return d.toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function getDaysRemaining(order: Order): number | null {
+  if (order.status === "DELIVERED") return 0;
+  const totalDays = order.deliveryDays ?? 7;
+  const elapsed = Math.round(STATUS_PROGRESS[order.status] * totalDays);
+  const remaining = totalDays - elapsed;
+  return Math.max(remaining, 1);
 }
 
 export default function OrderDetailPage() {
@@ -53,6 +71,7 @@ export default function OrderDetailPage() {
   const stepIndex = STATUS_STEPS.indexOf(order.status);
   const date = new Date(order.date);
   const expectedDelivery = getExpectedDelivery(order);
+  const daysRemaining = getDaysRemaining(order);
   const invoiceNum = `KOR-${String(order.id).padStart(6, "0")}`;
   const total = order.total ?? 0;
   const subtotal = total / 1.21;
@@ -214,7 +233,14 @@ export default function OrderDetailPage() {
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400">Estado del pedido</h2>
             <span className="text-xs text-gray-400">
-              Entrega estimada: <span className="font-semibold text-gray-600">{expectedDelivery}</span>
+              {order.status === "DELIVERED" ? (
+                <span className="font-semibold text-green-600">Entregado</span>
+              ) : (
+                <>Entrega estimada: <span className="font-semibold text-gray-600">{expectedDelivery}</span>
+                {daysRemaining !== null && daysRemaining > 0 && (
+                  <span className="ml-2 text-[#CDB4DB] font-bold">({daysRemaining} día{daysRemaining !== 1 ? "s" : ""} restante{daysRemaining !== 1 ? "s" : ""})</span>
+                )}</>
+              )}
             </span>
           </div>
           <div className="flex items-center gap-0">
@@ -247,7 +273,7 @@ export default function OrderDetailPage() {
                 <div key={item.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                   <div className="w-16 h-16 rounded-lg bg-[#f0eaf5] flex items-center justify-center shrink-0 overflow-hidden">
                     {item.productImage
-                      ? <img src={item.productImage} alt={item.productName} className="w-full h-full object-contain p-2" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                      ? <img src={cloudinaryUrl(item.productImage, { width: 300, height: 375 })} alt={item.productName} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                       : <div className="w-6 h-6 opacity-20"><KoraIcon className="w-full h-full" /></div>
                     }
                   </div>

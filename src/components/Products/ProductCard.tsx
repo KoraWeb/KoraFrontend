@@ -8,10 +8,13 @@ import HeartIcon from "@/components/Icons/HeartIcon";
 import { useWishlist } from "@/app/context/WishlistContext";
 import Cookies from "js-cookie";
 import LoginModal from "../Modals/LoginModal";
+import { useAuth } from "@/app/context/AuthContext";
+import { cloudinaryUrl } from "@/lib/cloudinary";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [loading, setLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { logged } = useAuth();
+
 
   const [open, setOpen] = useState(false);
 
@@ -30,16 +33,13 @@ export default function ProductCard({ product }: { product: Product }) {
     try {
       await toggleWishlist(product.id);
     } catch (error) {
-      
+
     } finally {
       setLoading(false);
     }
   };
 
   // Verificamos si el usuario está logueado al cargar la pagina
-  useEffect(() => {
-    setIsLoggedIn(!!Cookies.get("token"));
-  }, []);
 
   return (
     <div>
@@ -47,7 +47,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div>
           <div className="relative aspect-[3/4] overflow-hidden bg-[#ececec]">
             {/* Si esta logueado se muestra el boton para poderlo añadir a la wishlist */}
-            {isLoggedIn ? (
+            {logged ? (
               <button
                 onClick={handleWishlist}
                 disabled={loading}
@@ -66,7 +66,7 @@ export default function ProductCard({ product }: { product: Product }) {
               </button>)}
 
             <Image
-              src={product.images?.[0] || "/placeholder.png"}
+              src={cloudinaryUrl(product.images?.[0], { width: 600, height: 750 })}
               alt={product.name}
               fill
               className="object-contain p-4 transition duration-500 group-hover:scale-[1.04]"

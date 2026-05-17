@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryUrl } from "@/lib/cloudinary";
+
 import Image from "next/image";
 import Link from "next/link";
 import styles from "@/styles/buttons.module.css";
@@ -109,7 +111,7 @@ export default function BagPage() {
                 <div className="flex gap-4 sm:gap-6">
                   <div className="relative h-32 w-28 shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:h-44 sm:w-40">
                     <Image
-                      src={item.productImage || "/placeholder.png"}
+                      src={cloudinaryUrl(item.productImage, { width: 300, height: 375 })}
                       alt={item.productName}
                       fill
                       className="object-contain p-2"

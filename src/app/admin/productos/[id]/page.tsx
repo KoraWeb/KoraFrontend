@@ -66,7 +66,7 @@ export default function AdminProductoEditPage() {
           fd.append("files", file);
 
           // Llama a la API Route server-side — el token lo pone el servidor
-          const res = await fetch(`/api/admin/productos/${productId}/images`, {
+          const res = await fetch(`/api/admin/productos/images?id=${productId}`, {
             method: "POST",
             body: fd,
           });
@@ -102,7 +102,7 @@ export default function AdminProductoEditPage() {
     setImages(prev => prev.filter(u => u !== url));
     if (productId) {
       // API Route server-side
-      await fetch(`/api/admin/productos/${productId}/images`, {
+      await fetch(`/api/admin/productos/images?id=${productId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
@@ -130,7 +130,7 @@ export default function AdminProductoEditPage() {
       };
 
       const res = await fetch(
-        isNew ? "/api/admin/productos" : `/api/admin/productos/${productId}`,
+        isNew ? "/api/admin/productos" : `/api/admin/productos?id=${productId}`,
         {
           method: isNew ? "POST" : "PUT",
           headers: { "Content-Type": "application/json" },
@@ -344,8 +344,15 @@ export default function AdminProductoEditPage() {
 
             <div>
               <label className="text-[10px] font-bold tracking-widest uppercase text-black/40 block mb-1.5">Categoría *</label>
-              <input value={category} onChange={e => setCategory(e.target.value)} placeholder="camisetas, pantalones, zapatos..."
-                className="w-full border border-black/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
+              <select value={category} onChange={e => setCategory(e.target.value)}
+                className="w-full border border-black/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors">
+                <option value="">Seleccionar categoría...</option>
+                <option value="men">Hombre</option>
+                <option value="women">Mujer</option>
+                <option value="kids">Kids</option>
+                <option value="sneakers">Sneakers</option>
+                <option value="essentials">Essentials</option>
+              </select>
             </div>
 
             <button onClick={handleSave} disabled={saving}

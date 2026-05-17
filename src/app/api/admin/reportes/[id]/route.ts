@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const API = () => process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 function getToken(req: NextRequest) {
   return req.cookies.get("token")?.value;
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const token = getToken(req);
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  const { id } = await params;
+  const { id } = await context.params;
   const body = await req.json();
   try {
-    const res = await fetch(`${API}/api/admin/reports/${id}/status`, {
+    const res = await fetch(`${API()}/api/admin/reports/${id}/status`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(body),
@@ -25,13 +25,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const token = getToken(req);
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  const { id } = await params;
+  const { id } = await context.params;
   const body = await req.json();
   try {
-    const res = await fetch(`${API}/api/admin/reports/${id}/reply`, {
+    const res = await fetch(`${API()}/api/admin/reports/${id}/reply`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(body),
@@ -44,12 +44,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const token = getToken(req);
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  const { id } = await params;
+  const { id } = await context.params;
   try {
-    const res = await fetch(`${API}/api/admin/reports/${id}`, {
+    const res = await fetch(`${API()}/api/admin/reports/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",

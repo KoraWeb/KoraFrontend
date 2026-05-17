@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryUrl } from "@/lib/cloudinary";
+
 import Image from "next/image";
 import Link from "next/link";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
@@ -644,7 +646,7 @@ export default function PaymentForm() {
                 <div key={item.id} className="flex gap-4">
                   <div className="relative h-24 w-24 shrink-0 bg-gray-100">
                     <Image
-                      src={item.productImage || "/placeholder.png"}
+                      src={cloudinaryUrl(item.productImage, { width: 200, height: 250 })}
                       alt={item.productName}
                       fill
                       className="object-contain p-2"

@@ -7,15 +7,17 @@ import { getWishlist } from "@/api/wishlist/route";
 import { WishlistProduct } from "@/api/types/wishlist";
 import { useRouter } from "next/dist/client/components/navigation";
 import Cookies from "js-cookie";
+import { useAuth } from "../context/AuthContext";
 
-//Pagina de wishlist, donde guardar productos 
+
 export default function WishlistPage() {
   const [wishlist, setWishlist] = useState<WishlistProduct[]>([]);
   const router = useRouter();
-
+  const { logged } = useAuth();
+  
   useEffect(() => {
 
-    if (!Cookies.get("token")) {
+    if (!logged) {
       router.push("/auth");
       return;
     }

@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryUrl } from "@/lib/cloudinary";
+
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,13 +19,21 @@ const STATUS_COLOR: Record<string, string> = {
   PENDING: "#f59e0b", SHIPPED: "#3b82f6", IN_TRANSIT: "#8b5cf6", DELIVERED: "#10b981",
 };
 
+// Proporción del tiempo consumido según el estado del pedido
+const STATUS_ELAPSED: Record<string, number> = {
+  PENDING:    0,
+  SHIPPED:    0.35,
+  IN_TRANSIT: 0.70,
+  DELIVERED:  1,
+};
+
 function getDeliveryProgress(order: Order) {
-  const orderDate = new Date(order.date);
-  const expectedDate = new Date(orderDate.getTime() + (order.deliveryDays ?? 7) * 24 * 60 * 60 * 1000);
-  const now = new Date();
-  const percent = Math.min(100, Math.max(0, ((now.getTime() - orderDate.getTime()) / (expectedDate.getTime() - orderDate.getTime())) * 100));
-  const daysLeft = Math.max(0, Math.ceil((expectedDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)));
-  const isOverdue = now > expectedDate && order.status !== "DELIVERED";
+  const totalDays = order.deliveryDays ?? 7;
+  const elapsedRatio = STATUS_ELAPSED[order.status] ?? 0;
+  const elapsedDays = Math.round(elapsedRatio * totalDays);
+  const daysLeft = Math.max(0, totalDays - elapsedDays);
+  const percent = Math.round(elapsedRatio * 100);
+  const isOverdue = false; // Con este sistema nunca hay retraso visible
   return { daysLeft, percent, isOverdue };
 }
 
@@ -182,7 +192,7 @@ export default function ProfilePage() {
                     <div className="flex items-center gap-4">
                       <div className="w-20 h-20 rounded-xl bg-[#f0eaf5] flex items-center justify-center shrink-0 overflow-hidden">
                         {firstImage
-                          ? <img src={firstImage} alt="Producto" className="w-full h-full object-contain p-2" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                          ? <img src={cloudinaryUrl(firstImage, { width: 200, height: 250 })} alt="Producto" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                           : <div className="w-10 h-10 opacity-20"><KoraIcon className="w-full h-full" /></div>
                         }
                       </div>

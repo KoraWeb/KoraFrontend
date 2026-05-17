@@ -343,12 +343,18 @@ export default function AdminPromocionesPage() {
                 </div>
                 <div>
                   <label className="text-[10px] font-bold tracking-widest uppercase text-black/40 block mb-1.5">Categoría</label>
-                  <input
+                  <select
                     value={form.applicableCategory ?? ""}
                     onChange={e => set("applicableCategory", e.target.value || null)}
-                    placeholder="Toda la tienda"
                     className="w-full border border-black/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black"
-                  />
+                  >
+                    <option value="">Toda la tienda</option>
+                    <option value="men">Hombre</option>
+                    <option value="women">Mujer</option>
+                    <option value="kids">Kids</option>
+                    <option value="sneakers">Sneakers</option>
+                    <option value="essentials">Essentials</option>
+                  </select>
                 </div>
               </div>
 
@@ -376,7 +382,7 @@ export default function AdminPromocionesPage() {
               <label className="flex items-center gap-3 cursor-pointer">
                 <div
                   onClick={() => set("active", !form.active)}
-                  className={`w-11 h-6 rounded-full transition-colors relative ${form.active ? "bg-black" : "bg-black/20"}`}
+                  className={`w-11 h-6 rounded-full transition-colors relative ${form.active ? "bg-green-500" : "bg-black/20"}`}
                 >
                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${form.active ? "left-6" : "left-1"}`} />
                 </div>

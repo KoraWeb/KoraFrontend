@@ -40,16 +40,14 @@ export default function LoginPage() {
         try {
             const data = await login(email, password);
 
-            // Verifica que el 2fa_trusted es de ESTE usuario concreto
             const trusted = Cookies.get("2fa_trusted");
             const isTrustedDevice = trusted && trusted === email;
 
             if (isTrustedDevice) {
-                // Dispositivo de confianza para este usuario — entra directamente
+                // Dispositivo de confianza — guarda token y entra directamente
                 await saveToken(data.token, rememberMe);
 
                 if (rememberMe) {
-                    // Renueva la cookie vinculada al email del usuario
                     Cookies.set("2fa_trusted", email, {
                         expires: 30,
                         secure: process.env.NODE_ENV === "production",
@@ -64,6 +62,8 @@ export default function LoginPage() {
                 setLogged(true);
                 router.push("/profile");
             } else {
+                // Requiere 2FA — guarda el token pendiente y muestra el modal
+                // El modal se encarga de guardar el token verificado en la cookie
                 setPendingToken(data.token);
                 await send2FA(email);
                 setShow2FA(true);
@@ -83,6 +83,7 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
     return (
         <div className="min-h-screen w-full flex flex-col items-center text-black font-serif ">
             <div className="mb-12">
@@ -139,9 +140,8 @@ export default function LoginPage() {
                 <TwoFactorModal
                     email={email}
                     rememberMe={rememberMe}
-                    onSuccess={async (name, id) => {
-                        await saveToken(pendingToken, rememberMe);
-                        const decoded = jwtDecode<UserPayload>(pendingToken);
+                    onSuccess={async (name, id, verifiedToken) => {
+                        const decoded = jwtDecode<UserPayload>(verifiedToken);
                         setName(decoded.name ?? "");
                         setUsername(decoded.username ?? "");
                         setId(decoded.id);

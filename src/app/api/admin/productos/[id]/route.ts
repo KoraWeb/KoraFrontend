@@ -5,12 +5,12 @@ const getAPI = () =>
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
-  const { id } = await params;
+  const { id } = await context.params;
   const body = await req.json();
 
   try {
@@ -23,13 +23,9 @@ export async function PUT(
     const text = await res.text();
     let data: unknown;
     try { data = JSON.parse(text); } catch { data = {}; }
-    if (!res.ok) {
-      // Log detallado solo en servidor
-      console.error(`[PUT /products/${id}] Backend ${res.status}:`, text.slice(0, 500));
-    }
+    if (!res.ok) console.error(`[PUT /products/${id}] Backend ${res.status}:`, text.slice(0, 500));
     return NextResponse.json(data, { status: res.status });
   } catch (e: any) {
-    // Error de red: backend apagado, etc.
     console.error(`[PUT /products/${id}] Network error:`, e?.message);
     return NextResponse.json({ error: "Error guardando" }, { status: 503 });
   }
@@ -37,12 +33,12 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
-  const { id } = await params;
+  const { id } = await context.params;
 
   try {
     const res = await fetch(`${getAPI()}/products/${id}`, {

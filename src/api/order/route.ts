@@ -20,6 +20,11 @@ export type Order = {
   userName?: string;
   userEmail?: string;
   userAddress?: string;
+  promoCode?: string;
+  promoDescription?: string;
+  promoDiscountType?: "PERCENTAGE" | "FIXED";
+  promoDiscountValue?: number;
+  promoSaving?: number; 
 };
 
 export async function getUserOrders(token: string, year?: number): Promise<Order[]> {

@@ -45,8 +45,8 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
         suppressHydrationWarning={true}
       >
         <SessionProviderWrapper>
-          <WishlistProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <WishlistProvider>
               <NavBar />
               <Suspense fallback={<LoadingSpinner />}>
                 <main className="pt-[70px]">
@@ -54,8 +54,8 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                 </main>
               </Suspense>
               <Footer />
-            </AuthProvider>
-          </WishlistProvider>
+            </WishlistProvider>
+          </AuthProvider>
         </SessionProviderWrapper>
       </body>
     </html>
