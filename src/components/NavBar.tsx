@@ -42,12 +42,18 @@ export default function NavBar() {
         {/* ICONOS DERECHA */}
         <div className="flex items-center justify-end h-full gap-0">
 
-          <Link href="/wishlist" className="flex justify-center items-center hover:bg-[#a66fc6] w-[38px] h-full">
-            <HeartIcon className="w-[24px] h-[24px] text-black" />
+          <Link href="/search" className="flex justify-center items-center hover:bg-[#a66fc6] w-[38px] h-full">
+            <LensIcon className="w-[24px] h-[24px] text-black" />
           </Link>
+          {logged && (
+            <Link href="/wishlist" className="flex justify-center items-center hover:bg-[#a66fc6] w-[38px] h-full">
+              <HeartIcon className="w-[24px] h-[24px] text-black" />
+            </Link>
+          )}
           <Link href="/bag" className="flex justify-center items-center hover:bg-[#a66fc6] w-[38px] h-full">
             <BagIcon className="w-[24px] h-[24px] text-black" />
           </Link>
+
 
           {logged ? (
             <Link href="/profile" className="flex justify-center items-center hover:bg-[#a66fc6] w-[38px] h-full">

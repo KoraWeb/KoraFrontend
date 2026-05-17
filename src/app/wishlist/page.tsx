@@ -5,12 +5,21 @@ import Link from "next/link";
 import ProductCard from "@/components/Products/ProductCard";
 import { getWishlist } from "@/api/wishlist/route";
 import { WishlistProduct } from "@/api/types/wishlist";
+import { useRouter } from "next/dist/client/components/navigation";
+import Cookies from "js-cookie";
 
 //Pagina de wishlist, donde guardar productos 
 export default function WishlistPage() {
   const [wishlist, setWishlist] = useState<WishlistProduct[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
+
+    if (!Cookies.get("token")) {
+      router.push("/auth");
+      return;
+    }
+
     const loadWishlist = async () => {
       try {
         const data = await getWishlist();
