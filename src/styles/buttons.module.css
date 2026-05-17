@@ -1,0 +1,38 @@
+.btnBasic {
+  border: 1px solid #fff;
+  background: #c7a0dd;
+  color: white;
+  text-align: center;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition: background 0.2s ease;
+}
+
+.btnBasic:hover {
+  border: 1px solid #fff;
+  background: #a66fc6;
+  color: #fff;
+}
+
+.inputBox {
+  border-radius: 10px;
+  border: 1px solid #000;
+  background: white;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btnExternal {
+  border: 1px solid #C7A0DD;
+  border-radius: 10px;
+  color: #C7A0DD;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.btnExternal:hover {
+  border: 1px solid #C7A0DD;
+  border-radius: 10px;
+  background: #e1bdf7;
+  color: white;
+}
