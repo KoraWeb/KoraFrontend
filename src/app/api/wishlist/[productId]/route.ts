@@ -29,13 +29,13 @@ export async function POST(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
   try {
-    const res = await fetch(`${API}/wishlist/${params.productId}`, {
+    const res = await fetch(`${API}/wishlist/${(await params).productId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
